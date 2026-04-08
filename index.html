@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthspan — Own Your Medical History. Extend Your Healthy Lifespan.</title>
+  <meta name="description" content="Open-source health intelligence platform. Consolidate your medical history, integrate smart devices, and give yourself and your doctors a complete view of your health." />
+  <meta property="og:title" content="Healthspan — Own Your Health Data" />
+  <meta property="og:description" content="Open-source health intelligence platform built on Medicine 3.0 principles." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ryankolean.github.io/healthspan-landing/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Satoshi:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0C0F0A;--bg2:#111510;--card:#171C16;--card-h:#1D231C;
+      --bdr:#2A332A;--bdr-s:#1C241C;
+      --t1:#E8EDE5;--t2:#9BA898;--t3:#6B7A6B;
+      --acc:#C8A84E;--acc-d:rgba(200,168,78,.15);--acc-g:rgba(200,168,78,.06);
+      --grn:#4ADE80;--grn-d:rgba(74,222,128,.1);
+      --red:#F87171;--red-d:rgba(248,113,113,.1);
+      --blu:#60A5FA;--blu-d:rgba(96,165,250,.1);
+      --fd:'Instrument Serif',Georgia,serif;--fb:'Satoshi',-apple-system,sans-serif;
+      --mw:1120px
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--fb);background:var(--bg);color:var(--t1);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px}
+    ::selection{background:var(--acc-d);color:var(--acc)}
+    a{color:var(--acc);text-decoration:none;transition:opacity .2s}a:hover{opacity:.85}
+
+    /* Icons */
+    .ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;flex-shrink:0}
+    .ic svg{width:24px;height:24px;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+    .ic.a{background:var(--acc-d)}.ic.a svg{stroke:var(--acc)}
+    .ic.r{background:var(--red-d)}.ic.r svg{stroke:var(--red)}
+    .ic.g{background:var(--grn-d)}.ic.g svg{stroke:var(--grn)}
+
+    /* Nav */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(12,15,10,.8);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--bdr-s)}
+    .nl{font-family:var(--fd);font-size:1.35rem;color:var(--t1);letter-spacing:-.02em}.nl span{color:var(--acc)}
+    .nk{display:flex;gap:2rem;align-items:center}
+    .nk a{color:var(--t2);font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}.nk a:hover{color:var(--t1)}
+    .nc{background:var(--acc)!important;color:var(--bg)!important;padding:.5rem 1.25rem;border-radius:6px;font-weight:700!important;font-size:.75rem!important;letter-spacing:.05em}
+
+    /* Sections */
+    section{padding:7rem 2rem;position:relative}.con{max-width:var(--mw);margin:0 auto}
+
+    /* Hero */
+    .hero{min-height:100vh;display:flex;align-items:center;padding-top:5rem;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-40%;right:-25%;width:900px;height:900px;background:radial-gradient(circle,var(--acc-g) 0%,transparent 60%);pointer-events:none}
+    .hero::after{content:'';position:absolute;bottom:-20%;left:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(74,222,128,.03) 0%,transparent 60%);pointer-events:none}
+    .hc{position:relative;z-index:1;max-width:820px}
+    .hb{display:inline-flex;align-items:center;gap:.6rem;padding:.4rem 1.1rem;background:var(--grn-d);border:1px solid rgba(74,222,128,.18);border-radius:100px;font-size:.78rem;font-weight:600;color:var(--grn);margin-bottom:2rem;letter-spacing:.02em}
+    .hb::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--grn);animation:pd 2s ease-in-out infinite}
+    @keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
+    .hero h1{font-family:var(--fd);font-size:clamp(3rem,6.5vw,5.25rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.75rem}
+    .hero h1 em{font-style:italic;color:var(--acc)}
+    .hs{font-size:1.15rem;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:2.5rem}
+    .ha{display:flex;gap:1rem;flex-wrap:wrap}
+    .bp{display:inline-flex;align-items:center;gap:.6rem;background:var(--acc);color:var(--bg);padding:.85rem 2rem;border-radius:8px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:transform .15s,box-shadow .25s}
+    .bp:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(200,168,78,.25);opacity:1}
+    .bs{display:inline-flex;align-items:center;gap:.5rem;background:0 0;color:var(--t1);padding:.85rem 2rem;border-radius:8px;font-weight:600;font-size:.95rem;border:1px solid var(--bdr);cursor:pointer;transition:border-color .2s,background .2s}
+    .bs:hover{border-color:var(--t3);background:var(--bg2);opacity:1}
+    .hst{display:flex;gap:3.5rem;margin-top:4rem;padding-top:2.5rem;border-top:1px solid var(--bdr-s)}
+    .hst-v{font-family:var(--fd);font-size:2.25rem;color:var(--acc);line-height:1}
+    .hst-l{font-size:.75rem;color:var(--t3);margin-top:.4rem;text-transform:uppercase;letter-spacing:.07em;font-weight:500}
+
+    /* Section headings */
+    .sl{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--acc);font-weight:700;margin-bottom:1rem}
+    .st{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:1.25rem}
+    .sd{font-size:1.05rem;color:var(--t2);max-width:600px;line-height:1.75}
+
+    /* Problem */
+    .problem{background:var(--bg2);border-top:1px solid var(--bdr-s);border-bottom:1px solid var(--bdr-s)}
+    .pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:3.5rem}
+    .pc{background:var(--card);border:1px solid var(--bdr-s);border-radius:14px;padding:1.75rem;transition:border-color .25s,transform .25s,box-shadow .25s}
+    .pc:hover{border-color:rgba(248,113,113,.2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.2)}
+    .pc h3{font-size:1rem;font-weight:700;margin-bottom:.5rem}.pc p{font-size:.875rem;color:var(--t2);line-height:1.7}
+
+    /* Features */
+    .fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem;margin-top:3.5rem}
+    .fc{background:var(--card);border:1px solid var(--bdr-s);border-radius:14px;padding:1.75rem;transition:border-color .25s,transform .25s,box-shadow .25s}
+    .fc:hover{border-color:rgba(200,168,78,.2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.2)}
+    .fc h3{font-size:1rem;font-weight:700;margin-bottom:.5rem}.fc p{font-size:.875rem;color:var(--t2);line-height:1.7}
+
+    /* Dashboard preview */
+    .preview{background:var(--bg2);border-top:1px solid var(--bdr-s);border-bottom:1px solid var(--bdr-s)}
+    .pw{margin-top:3rem;border:1px solid var(--bdr);border-radius:16px;overflow:hidden;background:var(--bg);box-shadow:0 24px 80px rgba(0,0,0,.4),0 0 0 1px var(--bdr-s)}
+    .pb{display:flex;align-items:center;gap:.5rem;padding:.75rem 1.25rem;background:var(--card);border-bottom:1px solid var(--bdr-s)}
+    .pd{width:10px;height:10px;border-radius:50%}.pd:nth-child(1){background:#F87171}.pd:nth-child(2){background:#FBBF24}.pd:nth-child(3){background:#4ADE80}
+    .pu{margin-left:1rem;font-size:.7rem;color:var(--t3);background:var(--bg);padding:.25rem .75rem;border-radius:4px;border:1px solid var(--bdr-s);font-family:monospace}
+    .pl{display:grid;grid-template-columns:200px 1fr;min-height:380px}
+
+    /* Dash sidebar */
+    .ds{background:var(--card);border-right:1px solid var(--bdr-s);padding:1.25rem 0}
+    .dsb{font-family:var(--fd);font-size:1rem;color:var(--t1);padding:0 1.25rem 1rem;border-bottom:1px solid var(--bdr-s);margin-bottom:.75rem}.dsb span{color:var(--acc)}
+    .dn{display:flex;align-items:center;gap:.6rem;padding:.5rem 1.25rem;font-size:.78rem;color:var(--t3);font-weight:500;cursor:default;transition:color .15s,background .15s}
+    .dn.ac{color:var(--t1);background:var(--acc-d);border-right:2px solid var(--acc)}
+    .dn svg{width:16px;height:16px;opacity:.6;fill:none;stroke:currentColor;stroke-width:2}.dn.ac svg{opacity:1}
+
+    /* Dash main */
+    .dm{padding:1.5rem}
+    .dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+    .dt-title{font-size:1rem;font-weight:700}
+    .dt-per{font-size:.7rem;color:var(--t3);background:var(--card);padding:.25rem .75rem;border-radius:6px;border:1px solid var(--bdr-s)}
+    .dms{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.25rem}
+    .dtl{background:var(--card);border:1px solid var(--bdr-s);border-radius:10px;padding:1rem}
+    .dtl-l{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:.4rem;font-weight:600}
+    .dtl-v{font-family:var(--fd);font-size:1.65rem;color:var(--t1);line-height:1}
+    .dtl-u{font-family:var(--fb);font-size:.7rem;color:var(--t3);margin-left:.1rem}
+    .dtl-t{display:inline-flex;align-items:center;gap:.2rem;margin-top:.4rem;font-size:.68rem;font-weight:600;padding:.15rem .45rem;border-radius:4px}
+    .dtl-t.up{background:var(--grn-d);color:var(--grn)}.dtl-t.dn{background:var(--red-d);color:var(--red)}
+    .spk{margin-top:.5rem}.spk svg{display:block;width:100%;height:32px}
+
+    /* Dash chart */
+    .dc{background:var(--card);border:1px solid var(--bdr-s);border-radius:10px;padding:1rem}
+    .dc-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+    .dc-t{font-size:.78rem;font-weight:700}
+    .dc-tabs{display:flex;gap:.5rem}
+    .dc-tab{font-size:.65rem;font-weight:600;padding:.2rem .5rem;border-radius:4px;color:var(--t3);cursor:default}
+    .dc-tab.ac{background:var(--acc-d);color:var(--acc)}
+    .dc-b{height:110px;position:relative}.dc-b svg{width:100%;height:100%}
+
+    /* Roadmap */
+    .rt{margin-top:3.5rem}
+    .ri{display:grid;grid-template-columns:120px 40px 1fr;align-items:start}
+    .rp{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);padding-top:1.5rem;text-align:right;padding-right:1.5rem;font-weight:600}
+    .rl{display:flex;flex-direction:column;align-items:center;padding-top:1.5rem}
+    .rd{width:12px;height:12px;border-radius:50%;background:var(--bdr);border:2px solid var(--bg);flex-shrink:0;z-index:1}
+    .rd.done{background:var(--grn);box-shadow:0 0 8px var(--grn-d)}.rd.active{background:var(--acc);box-shadow:0 0 12px var(--acc-d)}
+    .rs{width:1px;flex:1;background:var(--bdr-s);min-height:2rem}
+    .rc{padding:1.25rem 0 2.5rem 1.5rem}.rc h3{font-size:1rem;font-weight:700;margin-bottom:.35rem}.rc p{font-size:.875rem;color:var(--t2);line-height:1.65}
+    .rtag{display:inline-block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .6rem;border-radius:4px;margin-top:.5rem}
+    .rtag.live{background:var(--grn-d);color:var(--grn)}.rtag.build{background:var(--acc-d);color:var(--acc)}.rtag.plan{background:rgba(148,163,184,.08);color:var(--t3)}
+
+    /* OSS */
+    .oss{background:var(--bg2);border-top:1px solid var(--bdr-s);border-bottom:1px solid var(--bdr-s)}
+    .ocb{margin-top:3rem;border:1px solid var(--bdr);border-radius:16px;padding:3.5rem 3rem;text-align:center;background:var(--card);position:relative;overflow:hidden}
+    .ocb::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,var(--acc) 50%,transparent 90%)}
+    .ocb::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:400px;height:200px;background:radial-gradient(ellipse,var(--acc-g) 0%,transparent 70%);pointer-events:none}
+    .ocb h3{font-family:var(--fd);font-size:1.75rem;margin-bottom:.75rem;position:relative}
+    .ocb p{color:var(--t2);max-width:480px;margin:0 auto 2rem;line-height:1.7;position:relative;font-size:.95rem}
+    .oa{position:relative;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+    /* Waitlist */
+    .wb{max-width:560px;margin:3rem auto 0;text-align:center}
+    .ef{display:flex;gap:.75rem;margin-top:1.5rem}
+    .ef input{flex:1;padding:.85rem 1.25rem;background:var(--card);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-family:var(--fb);font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}
+    .ef input::placeholder{color:var(--t3)}.ef input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-d)}
+    .ef button{padding:.85rem 1.75rem;background:var(--acc);color:var(--bg);border:none;border-radius:8px;font-weight:700;font-size:.9rem;font-family:var(--fb);cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .25s}
+    .ef button:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(200,168,78,.2)}
+    .wn{font-size:.73rem;color:var(--t3);margin-top:.75rem}
+
+    /* Footer */
+    footer{padding:3rem 2rem;border-top:1px solid var(--bdr-s);text-align:center}footer p{font-size:.78rem;color:var(--t3)}footer a{color:var(--t2)}
+
+    /* Animations */
+    .fu{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+    .fu.vis{opacity:1;transform:translateY(0)}
+    .fu.d1{transition-delay:.08s}.fu.d2{transition-delay:.16s}.fu.d3{transition-delay:.24s}.fu.d4{transition-delay:.32s}
+
+    @media(max-width:768px){
+      section{padding:4.5rem 1.25rem}.nk a:not(.nc){display:none}.hst{gap:1.5rem;flex-wrap:wrap}
+      .pl{grid-template-columns:1fr}.ds{display:none}.dms{grid-template-columns:repeat(2,1fr)}
+      .ef{flex-direction:column}.ri{grid-template-columns:0 40px 1fr}.rp{display:none}.ocb{padding:2.5rem 1.5rem}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nl">Health<span>span</span></div>
+  <div class="nk">
+    <a href="#features">Features</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#contribute">Contribute</a>
+    <a href="#waitlist" class="nc">Join Waitlist</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="con">
+    <div class="hc fu">
+      <div class="hb">Open Source &middot; In Active Development</div>
+      <h1>Own your medical history.<br/>Extend your <em>healthy</em> lifespan.</h1>
+      <p class="hs">Your health data is scattered across a dozen portals, fax machines, and filing cabinets. No doctor has the full picture &mdash; and neither do you. Healthspan changes that.</p>
+      <div class="ha">
+        <a href="https://github.com/ryankolean/healthspan-app" target="_blank" class="bp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a href="#waitlist" class="bs">Join the Waitlist</a>
+      </div>
+      <div class="hst">
+        <div><div class="hst-v">15</div><div class="hst-l">Health Metrics</div></div>
+        <div><div class="hst-v">5</div><div class="hst-l">Health Domains</div></div>
+        <div><div class="hst-v">7</div><div class="hst-l">Dashboard Views</div></div>
+        <div><div class="hst-v">100%</div><div class="hst-l">Your Data, Yours</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="problem" id="problem">
+  <div class="con">
+    <div class="fu">
+      <div class="sl">The Problem</div>
+      <h2 class="st">Your health data is everywhere<br/>except where you need it.</h2>
+      <p class="sd">You're living longer than any generation before you. But the system tracking your health was designed for sick care, not preventative longevity.</p>
+    </div>
+    <div class="pg">
+      <div class="pc fu d1">
+        <div class="ic r"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15" opacity=".5"/><line x1="9" y1="11" x2="13" y2="11" opacity=".5"/><path d="M3 12l-1 2m19-3l1-2" opacity=".35" stroke-dasharray="2 2"/></svg></div>
+        <h3>Fragmented Records</h3>
+        <p>Lab results in one portal, imaging in another, prescriptions in a third. Your primary care doctor doesn't see your cardiologist's notes.</p>
+      </div>
+      <div class="pc fu d2">
+        <div class="ic r"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Reactive, Not Preventative</h3>
+        <p>Traditional medicine waits for something to break. By the time symptoms appear, years of preventable decline have already happened.</p>
+      </div>
+      <div class="pc fu d3">
+        <div class="ic r"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M9 8h6M9 12h4" opacity=".5"/><path d="M18 8l4 0m0 0v8m0 0l-4 0" opacity=".3" stroke-dasharray="2 2"/></svg></div>
+        <h3>Wearable Data Goes Nowhere</h3>
+        <p>Your Oura Ring tracks sleep, HRV, and resting heart rate around the clock &mdash; but that data never reaches your physician.</p>
+      </div>
+      <div class="pc fu d4">
+        <div class="ic r"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/><line x1="12" y1="17" x2="12" y2="19"/></svg></div>
+        <h3>You Don't Own Your Data</h3>
+        <p>Your most personal information lives on corporate servers you don't control. Switching providers means starting over.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="con">
+    <div class="fu">
+      <div class="sl">The Solution</div>
+      <h2 class="st">One platform. Complete picture.<br/>Built for longevity.</h2>
+      <p class="sd">Healthspan consolidates your entire health profile into a single, patient-owned platform &mdash; calibrated to longevity research, not population averages.</p>
+    </div>
+    <div class="fg">
+      <div class="fc fu d1">
+        <div class="ic a"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Trend Engine</h3>
+        <p>14-day rolling averages compared against 90-day baselines across 15 health metrics. See where you're heading, not just where you are.</p>
+      </div>
+      <div class="fc fu d2">
+        <div class="ic a"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" opacity=".5"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3>Medicine 3.0 Targets</h3>
+        <p>Every target range is calibrated to longevity research from Peter Attia's Outlive framework &mdash; not generic population averages.</p>
+      </div>
+      <div class="fc fu d3">
+        <div class="ic a"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <h3>Course Corrections</h3>
+        <p>Automatic alerts when metrics decline or drift outside target zones. Catch problems before they become diagnoses.</p>
+      </div>
+      <div class="fc fu d1">
+        <div class="ic a"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/><path d="M8 12h2l1-3 2 6 1-3h2" stroke-width="1.5"/></svg></div>
+        <h3>Overall Health Score</h3>
+        <p>Weighted composite factoring zone status and trend direction across all domains. One number, deep context behind it.</p>
+      </div>
+      <div class="fc fu d2">
+        <div class="ic a"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 18h.01" stroke-width="2.5"/><path d="M9 7h6M9 10h4" opacity=".5"/><path d="M2 10a4 4 0 000 4M22 10a4 4 0 010 4" opacity=".4"/></svg></div>
+        <h3>Smart Device Integration</h3>
+        <p>Oura Ring data flows in automatically. Fitbit, Apple Health, and Garmin integrations on the roadmap.</p>
+      </div>
+      <div class="fc fu d3">
+        <div class="ic a"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/><path d="M12 2v1" stroke-width="2"/></svg></div>
+        <h3>Open Source, Self-Hosted</h3>
+        <p>Your health data stays on infrastructure you control. No vendor lock-in. No corporate data harvesting. Fork it, run it, own it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="preview">
+  <div class="con">
+    <div class="fu">
+      <div class="sl">Live Dashboard</div>
+      <h2 class="st">Data you can actually act on.</h2>
+      <p class="sd">Seven dashboard views across sleep, activity, heart, readiness, and resilience &mdash; all driven by real wearable data.</p>
+    </div>
+    <div class="pw fu">
+      <div class="pb">
+        <div class="pd"></div><div class="pd"></div><div class="pd"></div>
+        <span class="pu">healthspan / dashboard / trends</span>
+      </div>
+      <div class="pl">
+        <div class="ds">
+          <div class="dsb">Health<span>span</span></div>
+          <div class="dn ac"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Trends</div>
+          <div class="dn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</div>
+          <div class="dn"><svg viewBox="0 0 24 24"><path d="M2 12a5 5 0 005 5h10a5 5 0 000-10H7"/><circle cx="17" cy="12" r="2"/></svg>Sleep</div>
+          <div class="dn"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Heart</div>
+          <div class="dn"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 14 15 20 9"/><polyline points="14 9 20 9 20 15"/></svg>Activity</div>
+          <div class="dn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12a4 4 0 018 0"/><line x1="12" y1="8" x2="12" y2="12"/></svg>Readiness</div>
+        </div>
+        <div class="dm">
+          <div class="dh"><div class="dt-title">Health Trends</div><div class="dt-per">Last 14 Days</div></div>
+          <div class="dms">
+            <div class="dtl">
+              <div class="dtl-l">Resting HR</div>
+              <div class="dtl-v">51<span class="dtl-u">bpm</span></div>
+              <div class="dtl-t up">&#x25B2; Optimal</div>
+              <div class="spk"><svg viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,22 10,20 20,24 30,18 40,19 50,16 60,17 70,14 80,15 90,12 100,13 110,10 120,11" fill="none" stroke="#4ADE80" stroke-width="1.5" opacity=".7"/><polygon points="0,22 10,20 20,24 30,18 40,19 50,16 60,17 70,14 80,15 90,12 100,13 110,10 120,11 120,32 0,32" fill="#4ADE80" opacity=".08"/></svg></div>
+            </div>
+            <div class="dtl">
+              <div class="dtl-l">HRV</div>
+              <div class="dtl-v">100<span class="dtl-u">ms</span></div>
+              <div class="dtl-t up">&#x25B2; +8%</div>
+              <div class="spk"><svg viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,20 10,22 20,18 30,20 40,15 50,17 60,13 70,16 80,11 90,14 100,10 110,12 120,8" fill="none" stroke="#4ADE80" stroke-width="1.5" opacity=".7"/><polygon points="0,20 10,22 20,18 30,20 40,15 50,17 60,13 70,16 80,11 90,14 100,10 110,12 120,8 120,32 0,32" fill="#4ADE80" opacity=".08"/></svg></div>
+            </div>
+            <div class="dtl">
+              <div class="dtl-l">Sleep Score</div>
+              <div class="dtl-v">84<span class="dtl-u">/100</span></div>
+              <div class="dtl-t up">&#x25B2; Improving</div>
+              <div class="spk"><svg viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,18 10,20 20,16 30,22 40,14 50,18 60,12 70,15 80,10 90,14 100,8 110,12 120,9" fill="none" stroke="#4ADE80" stroke-width="1.5" opacity=".7"/><polygon points="0,18 10,20 20,16 30,22 40,14 50,18 60,12 70,15 80,10 90,14 100,8 110,12 120,9 120,32 0,32" fill="#4ADE80" opacity=".08"/></svg></div>
+            </div>
+            <div class="dtl">
+              <div class="dtl-l">Vascular Age</div>
+              <div class="dtl-v">31<span class="dtl-u">yrs</span></div>
+              <div class="dtl-t up">&#x25B2; 4yr younger</div>
+              <div class="spk"><svg viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,16 10,15 20,16 30,14 40,15 50,14 60,13 70,14 80,13 90,12 100,13 110,12 120,12" fill="none" stroke="#60A5FA" stroke-width="1.5" opacity=".7"/><polygon points="0,16 10,15 20,16 30,14 40,15 50,14 60,13 70,14 80,13 90,12 100,13 110,12 120,12 120,32 0,32" fill="#60A5FA" opacity=".06"/></svg></div>
+            </div>
+          </div>
+          <div class="dc">
+            <div class="dc-h"><div class="dc-t">HRV Trend &mdash; 14d vs 90d Baseline</div><div class="dc-tabs"><div class="dc-tab ac">14D</div><div class="dc-tab">30D</div><div class="dc-tab">90D</div></div></div>
+            <div class="dc-b">
+              <svg viewBox="0 0 600 110" preserveAspectRatio="none">
+                <line x1="0" y1="27" x2="600" y2="27" stroke="#2A332A" stroke-width=".5" stroke-dasharray="4 4"/>
+                <line x1="0" y1="55" x2="600" y2="55" stroke="#2A332A" stroke-width=".5" stroke-dasharray="4 4"/>
+                <line x1="0" y1="82" x2="600" y2="82" stroke="#2A332A" stroke-width=".5" stroke-dasharray="4 4"/>
+                <rect x="0" y="40" width="600" height="30" fill="#C8A84E" opacity=".06" rx="2"/>
+                <text x="590" y="58" fill="#6B7A6B" font-size="8" text-anchor="end" font-family="Satoshi,sans-serif">90d baseline</text>
+                <polyline points="0,75 43,70 86,68 129,62 172,58 215,55 258,50 301,52 344,45 387,42 430,38 473,35 516,32 559,30 600,28" fill="none" stroke="#C8A84E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <polygon points="0,75 43,70 86,68 129,62 172,58 215,55 258,50 301,52 344,45 387,42 430,38 473,35 516,32 559,30 600,28 600,110 0,110" fill="url(#ag)" opacity=".2"/>
+                <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C8A84E"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
+                <circle cx="600" cy="28" r="3.5" fill="#C8A84E"/><circle cx="600" cy="28" r="6" fill="#C8A84E" opacity=".15"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="con">
+    <div class="fu">
+      <div class="sl">Roadmap</div>
+      <h2 class="st">Where we are. Where we're going.</h2>
+    </div>
+    <div class="rt fu">
+      <div class="ri"><div class="rp">Phase 1</div><div class="rl"><div class="rd done"></div><div class="rs"></div></div><div class="rc"><h3>Pharma Dashboard</h3><p>Oura Ring integration, trend engine, 15 health metrics, 7 dashboard views, Medicine 3.0 targets, course correction alerts.</p><span class="rtag live">Live</span></div></div>
+      <div class="ri"><div class="rp">Phase 2</div><div class="rl"><div class="rd active"></div><div class="rs"></div></div><div class="rc"><h3>Bloodwork &amp; Lab Integration</h3><p>Import lab results, overlay biomarkers against wearable data, track trends over time. Give your doctor the view they've never had.</p><span class="rtag build">Building Now</span></div></div>
+      <div class="ri"><div class="rp">Phase 3</div><div class="rl"><div class="rd"></div><div class="rs"></div></div><div class="rc"><h3>Exercise &amp; Nutrition Domains</h3><p>RPG-style progression tree across 76 health nodes. Exercise protocols, nutrition tracking, and an XP system with tier gates.</p><span class="rtag plan">Planned</span></div></div>
+      <div class="ri"><div class="rp">Phase 4</div><div class="rl"><div class="rd"></div><div class="rs"></div></div><div class="rc"><h3>Oura OAuth &amp; Multi-Device Sync</h3><p>Live Oura API integration, Fitbit and Apple Health connectors, and automatic daily data sync.</p><span class="rtag plan">Planned</span></div></div>
+      <div class="ri"><div class="rp">Phase 5</div><div class="rl"><div class="rd"></div></div><div class="rc"><h3>Clinician Export &amp; Emotional Health</h3><p>PDF generation for doctor visits, emotional health domain, and the complete Medicine 3.0 platform vision.</p><span class="rtag plan">Planned</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="oss" id="contribute">
+  <div class="con">
+    <div class="fu">
+      <div class="sl">Open Source</div>
+      <h2 class="st">Built in the open. Contributions welcome.</h2>
+      <p class="sd">Healthspan is MIT-licensed and built on a modern stack: React 18, TypeScript, Vite, Tailwind CSS, and Recharts. If you care about health data ownership, we want your help.</p>
+    </div>
+    <div class="ocb fu">
+      <h3>Start Contributing Today</h3>
+      <p>Check out the repo, pick an issue, or propose a new feature. Every line of code helps people take control of their health data.</p>
+      <div class="oa">
+        <a href="https://github.com/ryankolean/healthspan-app" target="_blank" class="bp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>View Repository</a>
+        <a href="https://github.com/ryankolean/healthspan-app/issues" target="_blank" class="bs">Browse Issues</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="waitlist">
+  <div class="con">
+    <div class="wb fu">
+      <div class="sl">Early Access</div>
+      <h2 class="st">Get notified when the full platform launches.</h2>
+      <p class="sd" style="max-width:100%">We're building toward a complete health intelligence platform. Join the waitlist to be the first to know when new features ship.</p>
+      <form class="ef" id="wf">
+        <input type="email" placeholder="you@example.com" required />
+        <button type="submit">Join Waitlist</button>
+      </form>
+      <p class="wn">No spam. Unsubscribe anytime. We respect your data here too.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="con">
+    <p>Healthspan is an open-source project by <a href="https://summitsoftwaresolutions.dev" target="_blank">Summit Software Solutions LLC</a></p>
+    <p style="margin-top:.5rem"><a href="https://github.com/ryankolean/healthspan-app" target="_blank">GitHub</a> &middot; <a href="https://summitsoftwaresolutions.dev" target="_blank">Summit Software</a></p>
+  </div>
+</footer>
+
+<script>
+const o=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fu').forEach(e=>o.observe(e));
+document.getElementById('wf').addEventListener('submit',function(e){e.preventDefault();const i=this.querySelector('input'),b=this.querySelector('button');console.log('Waitlist:',i.value);b.textContent="You're In!";b.style.background='#4ADE80';i.value='';i.placeholder='Thanks \u2014 we\u2019ll be in touch.';i.disabled=b.disabled=true});
+</script>
+</body>
+</html>
