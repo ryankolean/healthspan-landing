@@ -366,11 +366,22 @@
 
   /* --- Pillar carousel (desktop) / stack (mobile) --- */
   .pillars { padding: var(--section-padding) 0; }
+  .pillars__carousel {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 2em;
+    min-height: 24em;
+    overflow: hidden;
+  }
   .pillars__stage {
     position: relative;
     text-align: center;
-    padding: 2em 0;
+    padding: 1em 0;
+    transition: opacity var(--animation-default), transform var(--animation-default);
   }
+  .pillars__stage.is--swapping { opacity: 0; transform: scale(0.96); }
   .pillars__icon {
     width: 16em; height: 16em;
     margin: 0 auto 1.5em;
@@ -378,26 +389,63 @@
     background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--pillar-color) 70%, white), var(--pillar-color));
     box-shadow: 0 20px 60px -10px color-mix(in srgb, var(--pillar-color) 40%, transparent);
     position: relative;
+    transition: background var(--animation-default), box-shadow var(--animation-default);
   }
   .pillars__icon::after {
     content: attr(data-icon);
     position: absolute; inset: 0;
     display: grid; place-items: center;
     font-size: 4em;
+    color: rgba(18, 21, 21, 0.6);
+    font-weight: 500;
   }
-  .pillars__name { font-size: 1.5em; font-weight: 500; margin-bottom: 1em; }
+  .pillars__name {
+    font-size: 1.5em; font-weight: 500;
+    margin-bottom: 1em;
+    transition: opacity var(--animation-default-fast, 0.3s ease);
+  }
+  .pillars__satellite {
+    opacity: 0.35;
+    transform: scale(0.55);
+    transition: opacity var(--animation-default), transform var(--animation-default);
+    pointer-events: none;
+  }
+  .pillars__satellite--prev { justify-self: end; transform: scale(0.55) translateX(2em); }
+  .pillars__satellite--next { justify-self: start; transform: scale(0.55) translateX(-2em); }
+  .pillars__satellite .pillars__icon {
+    width: 12em; height: 12em; margin: 0;
+  }
   .pillars__nav {
-    display: flex; justify-content: center; gap: 0.5em; margin-top: 2em;
+    display: flex; justify-content: center; gap: 0.5em; margin-top: 1em;
   }
   .pillars__nav button {
-    width: 2.5em; height: 2.5em; border-radius: 100%;
+    width: 2.75em; height: 2.75em; border-radius: 100%;
     border: 1px solid rgba(18, 21, 21, 0.15);
     background: transparent; cursor: pointer;
     font-size: 1em;
+    color: var(--color-dark);
+    transition: background var(--animation-ease, 0.2s), border-color var(--animation-ease, 0.2s);
+  }
+  .pillars__nav button:hover {
+    background: var(--color-dark);
+    color: var(--color-white);
+    border-color: var(--color-dark);
+  }
+  .pillars__dots {
+    display: flex; justify-content: center; gap: 0.4em; margin-top: 1.25em;
+  }
+  .pillars__dots span {
+    width: 0.4em; height: 0.4em; border-radius: 50%;
+    background: rgba(18, 21, 21, 0.18);
+    transition: background var(--animation-ease, 0.2s), width var(--animation-ease, 0.2s);
+  }
+  .pillars__dots span.is--active {
+    background: var(--color-dark);
+    width: 1.4em; border-radius: 100em;
   }
   .pillars__stack { display: none; }
   @media (max-width: 767px) {
-    .pillars__stage, .pillars__nav { display: none; }
+    .pillars__carousel, .pillars__nav, .pillars__dots { display: none; }
     .pillars__stack {
       display: grid; gap: 2em;
     }
@@ -612,15 +660,24 @@
       <h2>Six inputs. One healthspan.</h2>
     </div>
 
-    <div class="pillars__stage" style="--pillar-color: var(--accent-bloodwork);">
-      <div class="pillars__icon" data-icon="BL"></div>
-      <div class="pillars__name">Bloodwork</div>
-      <a href="#" class="btn-pill">Explore feature</a>
+    <div class="pillars__carousel" id="pillars-carousel">
+      <div class="pillars__satellite pillars__satellite--prev" aria-hidden="true">
+        <div class="pillars__icon" data-icon=""></div>
+      </div>
+      <div class="pillars__stage">
+        <div class="pillars__icon" data-icon=""></div>
+        <div class="pillars__name"></div>
+        <a href="#" class="btn-pill pillars__cta">Explore feature</a>
+      </div>
+      <div class="pillars__satellite pillars__satellite--next" aria-hidden="true">
+        <div class="pillars__icon" data-icon=""></div>
+      </div>
     </div>
     <div class="pillars__nav">
-      <button aria-label="previous">←</button>
-      <button aria-label="next">→</button>
+      <button aria-label="previous" id="pillars-prev">&larr;</button>
+      <button aria-label="next" id="pillars-next">&rarr;</button>
     </div>
+    <div class="pillars__dots" id="pillars-dots" aria-hidden="true"></div>
 
     <div class="pillars__stack">
       <div class="pillars__stack-item" style="--pillar-color: var(--accent-bloodwork);">
@@ -677,6 +734,67 @@
 </footer>
 
 <script>
+// Pillar carousel
+(function(){
+  const pillars = [
+    { key: 'bloodwork', name: 'Bloodwork', icon: 'BL', color: 'var(--accent-bloodwork)' },
+    { key: 'nutrition', name: 'Nutrition', icon: 'NU', color: 'var(--accent-nutrition)' },
+    { key: 'exercise',  name: 'Exercise',  icon: 'EX', color: 'var(--accent-exercise)' },
+    { key: 'sleep',     name: 'Sleep',     icon: 'SL', color: 'var(--accent-sleep)' },
+    { key: 'emotional', name: 'Emotional', icon: 'EM', color: 'var(--accent-emotional)' },
+    { key: 'molecules', name: 'Molecules', icon: 'MO', color: 'var(--accent-molecules)' }
+  ];
+  const carousel = document.getElementById('pillars-carousel');
+  if (!carousel) return;
+  const stage = carousel.querySelector('.pillars__stage');
+  const stageIcon = stage.querySelector('.pillars__icon');
+  const stageName = stage.querySelector('.pillars__name');
+  const prevSat = carousel.querySelector('.pillars__satellite--prev .pillars__icon');
+  const nextSat = carousel.querySelector('.pillars__satellite--next .pillars__icon');
+  const dotsEl = document.getElementById('pillars-dots');
+  let idx = 0;
+
+  pillars.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.addEventListener('click', () => go(i));
+    dotsEl.appendChild(d);
+  });
+
+  function render() {
+    const cur = pillars[idx];
+    const prev = pillars[(idx - 1 + pillars.length) % pillars.length];
+    const next = pillars[(idx + 1) % pillars.length];
+    stage.style.setProperty('--pillar-color', cur.color);
+    stageIcon.dataset.icon = cur.icon;
+    stageName.textContent = cur.name;
+    prevSat.parentElement.style.setProperty('--pillar-color', prev.color);
+    prevSat.dataset.icon = prev.icon;
+    nextSat.parentElement.style.setProperty('--pillar-color', next.color);
+    nextSat.dataset.icon = next.icon;
+    [...dotsEl.children].forEach((d, i) => d.classList.toggle('is--active', i === idx));
+  }
+
+  function go(target) {
+    if (target === idx) return;
+    stage.classList.add('is--swapping');
+    setTimeout(() => {
+      idx = (target + pillars.length) % pillars.length;
+      render();
+      requestAnimationFrame(() => stage.classList.remove('is--swapping'));
+    }, 220);
+  }
+
+  document.getElementById('pillars-prev').addEventListener('click', () => go(idx - 1));
+  document.getElementById('pillars-next').addEventListener('click', () => go(idx + 1));
+
+  // Auto-advance every 5s, pause on hover
+  let timer = setInterval(() => go(idx + 1), 5000);
+  carousel.addEventListener('mouseenter', () => clearInterval(timer));
+  carousel.addEventListener('mouseleave', () => { timer = setInterval(() => go(idx + 1), 5000); });
+
+  render();
+})();
+
 document.getElementById('wf').addEventListener('submit', function(e) {
   e.preventDefault();
   const input = this.querySelector('input');
